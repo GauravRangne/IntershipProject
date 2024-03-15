@@ -1,80 +1,40 @@
 package com.boot.entity;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.PrimaryKeyJoinColumn;
 import lombok.Data;
 
+@Data
 @Entity
-
+@PrimaryKeyJoinColumn
 public class Courses {
-       @Id
+	
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
 	private int courseId;
        
-       @Column(length=90)
+    @Column(length=50)
 	private String courseName;
        
-    
+	private String courseDescription;
+
+    private int courseDuration;
 	
-       @Column(length=90)
-	private String CourseDescription;
+	@ManyToOne
+    private Admin adminId;
+
+	@ManyToMany(mappedBy ="course")
+	private Set<Teacher> teacher= new HashSet<>();
 	
-       @Column(length=60)
-	private int courseDuration;
-
-	public Courses() {
-		super();
-		// TODO Auto-generated constructor stub
-	}
-
-	public Courses(int courseId, String courseName,  String courseDescription, int courseDuration) {
-		super();
-		this.courseId = courseId;
-		this.courseName = courseName;
-		CourseDescription = courseDescription;
-		this.courseDuration = courseDuration;
-	}
-
-	@Override
-	public String toString() {
-		return "Courses [courseId=" + courseId + ", courseName=" + courseName + ",  CourseDescription=" + CourseDescription + ", courseDuration=" + courseDuration + "]";
-	}
-
-	public int getCourseId() {
-		return courseId;
-	}
-
-	public void setCourseId(int courseId) {
-		this.courseId = courseId;
-	}
-
-	public String getCourseName() {
-		return courseName;
-	}
-
-	public void setCourseName(String courseName) {
-		this.courseName = courseName;
-	}
-
-
-
-	public String getCourseDescription() {
-		return CourseDescription;
-	}
-
-	public void setCourseDescription(String courseDescription) {
-		CourseDescription = courseDescription;
-	}
-
-	public int getCourseDuration() {
-		return courseDuration;
-	}
-
-	public void setCourseDuration(int courseDuration) {
-		this.courseDuration = courseDuration;
-	}
-
-	 
-       
-       
+	@ManyToMany(mappedBy ="course")
+	private Set<Student> student= new HashSet<>();
 }

@@ -1,29 +1,35 @@
-package com.example.demo.entity;
-
-import java.util.Date;
+package com.boot.entity;
 
 import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import lombok.Data;
+import jakarta.persistence.Embeddable;
 
-
-@Entity
-@Data
+@Embeddable
 public class Exam {
 	
-	@Id
-	private int ExamID;
+	@Column
+	private boolean level1;
 	
-	private Date ExamDate;
+	@Column
+	private boolean level2;
 	
-	private int Duration;
+	@Column
+	private boolean level3;
 	
-	private int TotalMarks;
+	@Column
+	private boolean level4;
 	
-	private int PassingMarks;
+	@Column
+	private boolean level5;
 	
-	@Column(length=20)
-	private String ExamTopic;
+	@Column
+	private boolean level6;
 
+	@Column
+	private boolean level7;
+	
+	@Column
+	private boolean level8;
+	
+	@Column
+	private boolean level9;
 }

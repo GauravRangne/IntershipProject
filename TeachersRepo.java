@@ -6,13 +6,11 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import com.boot.entity.Teacher;
+
 @Repository
-public interface TeachersRepo extends JpaRepository<Teacher ,Integer > {
+public interface TeachersRepo extends JpaRepository<Teacher,String > {
 	
+	public List<Teacher> findByEmailIdAndPhoneNo(String userNm, long pwd);
 	
-	
-
-	public List<Teacher> findByTeacherNmAndPassword(String userNm, String pwd);
-	
-
+	public List<Teacher>findByTeacherNm(String string);
 }

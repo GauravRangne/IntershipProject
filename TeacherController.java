@@ -1,12 +1,15 @@
 package com.boot.controller;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RestController;
 
-
+import com.boot.dao.CourseRepo;
 import com.boot.dao.TeachersRepo;
+import com.boot.entity.Courses;
 import com.boot.entity.Teacher;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -15,72 +18,80 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 
-
-
-
-
+@RequestMapping("/teacher")
 @RestController
 public class TeacherController{
 	
 	@Autowired
 	TeachersRepo repo;
 	
-	@PostMapping("/addTeacher")
-	public void saveData(@RequestBody Teacher teacher) {
+	@Autowired
+	CourseRepo coursRepo;
+	
+	@PostMapping("/add-teacher/{courseName}")
+	public void savedata(@RequestBody Teacher teacher, @PathVariable String courseName) {
+		
 		repo.save(teacher);
+		
+		List<Teacher> obj1 = repo.findByTeacherNm(teacher.getTeacherNm());
+		
+		List<String> courseNm = new ArrayList<String>();
+		courseNm.add(courseName);
+		
+		Set<Courses> obj2 = coursRepo.findByCourseNameIn(courseNm);
+		
+		teacher.setCourse(obj2);
+		
+		repo.save(teacher);		
 	}
-	@DeleteMapping("delById/{id}")
-    public void delById(@PathVariable int id) {
+//	localhost:8080/addteachers/Full%20Stack%20Java
+	
+	@DeleteMapping("delete-teacher/{id}")
+    public void delById(@PathVariable String id) {
     repo.deleteById(id);
 	}
 	
-	@GetMapping("/showTeacher)")
+	@GetMapping("/show-teacher)")
 	public List<Teacher> showAllData(){
 		return repo.findAll();
 		
 	}
-	
-	
-	
-	
-	@PutMapping("/updatebyId/{id}")
-	public Teacher updateTeacher(@PathVariable int id, @RequestBody Teacher newTeacher ) {
-		//TODO: process PUT request
-		
- 
-			
-			return repo.findById(id).map( 
-					teacher ->{
-						teacher.setTeacherNm(newTeacher.getTeacherNm());
-						teacher.setTeacherEmail(newTeacher.getTeacherEmail());
-						teacher.setMobileNo(newTeacher.getMobileNo());
-						teacher.setSubject(newTeacher.getSubject());
-						teacher.setJoiningDate(newTeacher.getJoiningDate());
-						teacher.setSalary(newTeacher.getSalary());
-						teacher.setFrenchie(newTeacher.getFrenchie());
-						teacher.setBatchNo(newTeacher.getBatchNo());
-						
-						
-						
-						
-						
-						return repo.save(teacher);
-					}
-					
-					
-					).orElseGet(
-							()->repo.save(newTeacher)
-							
-							);
-					
-		}
 
-	@GetMapping("/validation/{userNm}/{pwd}")
-	public List<Teacher> validation(@PathVariable String userNm, @PathVariable String pwd){
+	@PutMapping("/update-teacher/{id}")
+	public Teacher updateTeacher(@PathVariable String id, @RequestBody Teacher newTeacher ) {
+
+		return repo.findById(id).map( 
+			teacher ->{
+				teacher.setTeacherNm(newTeacher.getTeacherNm());
+				teacher.setSubject(newTeacher.getSubject());
+				teacher.setJoiningDate(newTeacher.getJoiningDate());
+				teacher.setSalary(newTeacher.getSalary());
+				return repo.save(teacher);
+			}
+			).orElseGet(
+				()->repo.save(newTeacher)			
+		);	
+	}
+	
+	@PutMapping("/update-teacher-password/{id}")
+	public Teacher updateTeacherPassword(@PathVariable String  id, @RequestBody Teacher newteacher) {
+		return repo.findById(id).map( 
+				teacher ->{			
+					teacher.setPhoneNo(newteacher.getPhoneNo());
+					return repo.save(teacher);
+				}	
+		).orElseGet(
+				()->repo.save(newteacher)
+		);				
+	}	
+
+	@GetMapping("/teacher-validation/{userNm}/{pwd}")
+	public List<Teacher> validation(@PathVariable String userNm, @PathVariable long pwd){
 		System.out.println(userNm);
 		System.out.println(pwd);
-		return repo.findByTeacherNmAndPassword(userNm, pwd);
+		return repo.findByEmailIdAndPhoneNo(userNm, pwd);
 	}
 	
 }
