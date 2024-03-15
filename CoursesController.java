@@ -8,58 +8,59 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.service.annotation.GetExchange;
 
+import com.boot.dao.AdminReop;
 import com.boot.dao.CourseRepo;
+import com.boot.entity.Admin;
 import com.boot.entity.Courses;
 import org.springframework.web.bind.annotation.PutMapping;
 
-
+//@CrossOrigin("http://localhost:4200")
+@RequestMapping("/courses")
 @RestController
 public class CoursesController {
 
 	@Autowired
 	CourseRepo repo;
 	
-	@PostMapping("/addCourses")
-	public void  savedata(@RequestBody Courses courses) {
-		 repo.save(courses);
+	@Autowired
+	AdminReop admRepo;
+	
+	@PostMapping("/add-courses/{adminId}")
+	public void  savedata(@RequestBody Courses courses, @PathVariable String adminId) {
+		
+		repo.save(courses);
+		Admin adm = admRepo.findById(adminId).get();
+		courses.setAdminId(adm);
+		
+		repo.save(courses);
 	}
 	
-	@GetMapping("/showDetails")
+	@GetMapping("/show-courses")
 	public List<Courses> showAllDetails(){
 		return repo.findAll();
 	}
 	
-	@DeleteMapping("/byId/{id}")
-	public void deletedata(@PathVariable (name="id") int id){
+	@DeleteMapping("/delete-courses/{id}")
+	public void deletedata(@PathVariable int id){
 		repo.deleteById(id);
 	}
 	
-	@PutMapping("/updatebyId/{id}")
+	@PutMapping("/update-courses/{id}")
 	public  Courses updateCourses(@PathVariable int id, @RequestBody Courses newcourses) {
-		//TODO: process PUT request
-		
- 
-			
-			return repo.findById(id).map( 
-					courses ->{
-						courses.setCourseName(newcourses.getCourseName());
-						courses.setCourseDescription(newcourses.getCourseDescription());
-						courses.setCourseDuration(newcourses.getCourseDuration());
-						
-						
-						return repo.save(courses);
-					}
-					
-					
-					).orElseGet(
-							()->repo.save(newcourses)
-							
-							);
-					
-		}
-//	assign batch ,create batch,finAll,finbyId,
+
+		return repo.findById(id).map( 
+			courses ->{
+				courses.setCourseName(newcourses.getCourseName());
+				courses.setCourseDescription(newcourses.getCourseDescription());
+				courses.setCourseDuration(newcourses.getCourseDuration());
 	
+				return repo.save(courses);
+			}
+		).orElseGet(
+				()->repo.save(newcourses)			
+		);				
+	}	
 }

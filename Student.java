@@ -12,39 +12,49 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.PrimaryKeyJoinColumn;
 import lombok.Data;
 
 @Entity
 @Data
-public class Teacher extends User {
+@PrimaryKeyJoinColumn
+public class Student extends User{
 	
-	@Column(length = 30)	
-	private String teacherNm;
 	
-	private double salary;
+	@Column(length=10)
+	private String firstName;
 	
-	@Column(length = 20)
-	private String subject;
+	@Column(length=10)
+	private String middleName;
 	
-	private Date joiningDate;
+	@Column(length=10)
+	private String lastName;
+	
+	private String address;
+	
+	private int studentAge;
+	
+	private Date admissionDate;
 	
 	@Embedded
-	private Payment payment;
-
-	@OneToMany(mappedBy = "teacherId", cascade = CascadeType.ALL)
-	private List<Franchisee> franchisee;
+	private Exam exam;
 	
-	@OneToMany(mappedBy = "teacherId", cascade = CascadeType.ALL)
-	private List<Student> student;
+	@ManyToOne
+	private Teacher teacherId;
 	
-	@OneToMany(mappedBy = "teacherId", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "studentId", cascade = CascadeType.ALL)
 	private List<Attendance> attendance;
-
+	
+	@ManyToOne
+	private Batches batchId;
+	
 	@ManyToMany
-	@JoinTable(name= "teacherCourse",
-	joinColumns= @JoinColumn(name = "teacherId"),
+	@JoinTable(name= "studentCourse",
+	joinColumns= @JoinColumn(name = "studentId"),
 	inverseJoinColumns= @JoinColumn(name="courseId")
 	)
 	private Set<Courses> course = new HashSet<>();
+	
 }
