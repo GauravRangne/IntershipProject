@@ -86,12 +86,5 @@ public class TeacherController{
 				()->repo.save(newteacher)
 		);				
 	}	
-
-	@GetMapping("/teacher-validation/{userNm}/{pwd}")
-	public List<Teacher> validation(@PathVariable String userNm, @PathVariable long pwd){
-		System.out.println(userNm);
-		System.out.println(pwd);
-		return repo.findByEmailIdAndPhoneNo(userNm, pwd);
-	}
 	
 }

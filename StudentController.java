@@ -116,12 +116,5 @@ public class StudentController {
 				()->repo.save(newstudent)
 		);				
 	}
-	
-	@GetMapping("/student-validation/{userNm}/{pwd}")
-	public List<Student> validation(@PathVariable String userNm, @PathVariable long pwd){
-		System.out.println(userNm);
-		System.out.println(pwd);
-		return repo.findByEmailIdAndPhoneNo(userNm, pwd);
-	}
 
 }
