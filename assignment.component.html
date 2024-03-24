@@ -1,0 +1,15 @@
+<div class="assignment-form">
+  <h1>Assignment Submission</h1>
+  <form (ngSubmit)="submitAssignment()" #assignmentForm="ngForm">
+    <div class="form-group">
+      <label for="assignmentFile">Select Assignment File:</label>
+      <input type="file" id="assignmentFile" name="assignmentFile" accept=".pdf,.doc,.docx,.jpg,.png,.jpeg" required
+             [(ngModel)]="assignmentFile" #fileInput="ngModel">
+      <div *ngIf="fileInput.invalid && (fileInput.dirty || fileInput.touched)" class="error-message">
+        <span *ngIf="fileInput.errors?.['required']">Assignment file is required.</span>
+        <span *ngIf="fileInput.errors?.['accept']">Please select a PDF, DOC, or DOCX file.</span>
+      </div>
+    </div>
+    <button type="submit" (click)=" opensweetalert()">Submit Assignment</button>
+  </form>
+</div>
